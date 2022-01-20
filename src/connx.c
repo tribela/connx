@@ -513,6 +513,11 @@ int connx_Graph_destroy(connx_Graph* graph) {
         for (uint32_t i = 0; i < graph->node_count; i++) {
             if (graph->nodes[i] != NULL) {
                 connx_Node* node = graph->nodes[i];
+#ifdef DEBUG_INTERMEDIATE_TENSORS
+                if (node->op_name != NULL) {
+                    connx_free(node->op_name);
+                }
+#endif
                 if (node->op_type != NULL) {
                     connx_free(node->op_type);
                 }
