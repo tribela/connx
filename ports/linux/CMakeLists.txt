@@ -53,6 +53,13 @@ if(ENABLE_AVX)
     message(STATUS "Enabling AVX")
 endif()
 
+option(DEBUG_INTERMEDIATE_TENSORS "Enable debug intermediate output files" OFF)
+if (DEBUG_INTERMEDIATE_TENSORS)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG_INTERMEDIATE_TENSORS")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DDEBUG_INTERMEDIATE_TENSORS")
+    message(STATUS "Enabling debug intermediate output files")
+endif()
+
 add_executable(${PROJECT_NAME} ${SRC})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CONNX_HOME}/include)

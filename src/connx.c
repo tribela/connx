@@ -309,12 +309,36 @@ static int parse_Graph(connx_Graph* graph, char* text) {
     for (uint32_t i = 0; i < graph->node_count; i++) {
         connx_Node* node = graph->nodes[i] = connx_alloc(sizeof(connx_Node));
 
+#ifdef DEBUG_INTERMEDIATE_TENSORS
+        char* op_name = next_token(token);
+        char* op_type = strrchr(op_name, '|');
+        if (op_type != NULL) {
+            *op_type = '\0';
+            op_type++;
+            node->op_name = _strdup(op_name);
+            node->op_type = _strdup(op_type);
+            if (node->op_name == NULL || node->op_type == NULL) {
+                connx_error("Out of memory\n");
+                return CONNX_NOT_ENOUGH_MEMORY;
+            }
+        } else {
+            op_type = op_name;
+            node->op_name = NULL;
+            node->op_type = _strdup(op_type);
+            if (node->op_type == NULL) {
+                connx_error("Out of memory\n");
+                return CONNX_NOT_ENOUGH_MEMORY;
+            }
+        }
+#else
+
         char* op_type = next_token(token);
         node->op_type = _strdup(op_type);
         if (node->op_type == NULL) {
             connx_error("Out of memory\n");
             return CONNX_NOT_ENOUGH_MEMORY;
         }
+#endif
 
         // Find operator for op_type
         for (uint32_t i = 0; connx_opset_names[i] != NULL; i++) {

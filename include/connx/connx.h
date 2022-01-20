@@ -46,6 +46,9 @@ typedef struct _connx_Node {
     uint32_t attribute_count;
     void** attributes;
 
+#ifdef DEBUG_INTERMEDIATE_TENSORS
+    char* op_name;
+#endif
     char* op_type;
     CONNX_OPERATOR op;
 } connx_Node;
