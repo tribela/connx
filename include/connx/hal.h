@@ -45,7 +45,7 @@ void connx_unload(void* buf);
 // Tensor I/O
 int32_t connx_read(void* buf, int32_t size);
 int32_t connx_write(void* buf, int32_t size);
-int32_t connx_intermediate_write(void* buf, int32_t size, FILE* file);
+int32_t connx_intermediate_write(FILE* file, void* buf, int32_t size);
 
 // Lock
 #ifdef __linux__

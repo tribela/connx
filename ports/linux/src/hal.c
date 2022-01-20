@@ -276,6 +276,10 @@ int32_t connx_read(void* buf, int32_t size) {
 
 int32_t connx_write(void* buf, int32_t size) {
     FILE* file = _tensorout != NULL ? _tensorout : stdout;
+    return connx_intermediate_write(file, buf, size);
+}
+
+int32_t connx_intermediate_write(FILE* file, void* buf, int32_t size) {
 
     void* p = buf;
     size_t remain = size;
