@@ -608,6 +608,9 @@ int connx_Graph_run(connx_Graph* graph, uint32_t input_count, connx_Tensor** inp
                 fprintf(stderr, "Output %s\n", name);
                 connx_Tensor* tensor = connx_Graph_get(graph, node->outputs[i]);
                 FILE* fp = fopen(name, "wb");
+                connx_intermediate_write(&tensor->dtype, sizeof(uint32_t), fp);
+                connx_intermediate_write(&tensor->ndim, sizeof(uint32_t), fp);
+                connx_intermediate_write(tensor->shape, sizeof(uint32_t) * tensor->ndim, fp);
                 connx_intermediate_write(tensor->buffer, tensor->size, fp);
                 fclose(fp);
             }
