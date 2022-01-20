@@ -598,17 +598,32 @@ int connx_Graph_run(connx_Graph* graph, uint32_t input_count, connx_Tensor** inp
             return ret;
         }
 
-        for (uint32_t i = 0; i < node->input_count; i++) {
-            uint32_t id = node->inputs[i];
-            connx_Tensor* tensor = graph->value_infos[id];
-            // TODO: It's a temporary fix
-            if (tensor != NULL) {
-                int32_t ref_count = connx_Tensor_unref(tensor);
-                if (ref_count <= 0) {
-                    graph->value_infos[id] = NULL;
-                }
+#ifdef DEBUG_INTERMEDIATE_TENSORS
+        // TODO: Output intermediate outputs to file
+        if (node->op_name != NULL) {
+            for (uint32_t i = 0; i < node->output_count; i++) {
+                char name[256];
+                snprintf(name, 256, "node_%s_%u.output", node->op_name, i);
+                // connx_intermediate_write(node->outputs[i]);
+                fprintf(stderr, "Output %s\n", name);
+                connx_Tensor* tensor = connx_Graph_get(graph, node->outputs[i]);
+                FILE* fp = fopen(name, "wb");
+                connx_intermediate_write(tensor->buffer, tensor->size, fp);
+                fclose(fp);
             }
         }
+#endif
+            for (uint32_t i = 0; i < node->input_count; i++) {
+                uint32_t id = node->inputs[i];
+                connx_Tensor* tensor = graph->value_infos[id];
+                // TODO: It's a temporary fix
+                if (tensor != NULL) {
+                    int32_t ref_count = connx_Tensor_unref(tensor);
+                    if (ref_count <= 0) {
+                        graph->value_infos[id] = NULL;
+                    }
+                }
+            }
     }
 
     // Set outputs

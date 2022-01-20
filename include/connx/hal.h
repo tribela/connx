@@ -20,6 +20,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 // Ref: https://iq.opengenus.org/detect-operating-system-in-c/
 #ifdef __linux__
@@ -44,6 +45,7 @@ void connx_unload(void* buf);
 // Tensor I/O
 int32_t connx_read(void* buf, int32_t size);
 int32_t connx_write(void* buf, int32_t size);
+int32_t connx_intermediate_write(void* buf, int32_t size, FILE* file);
 
 // Lock
 #ifdef __linux__
